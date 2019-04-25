@@ -87,34 +87,31 @@ public class Lector {
 	public static int[] bellmanFord(int[][] pMatriz, int pFuente)
 	{
 		int V = pMatriz.length;
-		int E = V*V;
 		int[] costos = new int[V];
-		int[] predecesor = new int[V];
 		
 		for(int i = 0; i < V; i++)
 		{
-			costos[i] = Integer.MAX_VALUE;
+			costos[i] = 999999;
 		}
 		
 		costos[pFuente] = 0;
 		
-		for(int fuente = 0; fuente < V; fuente++)
+		for(int fuente = 0; fuente < V ; fuente++)
 		{
 			for(int destino = 0; destino < V; destino++)
 			{
-				if((pMatriz[fuente][destino] != Integer.MAX_VALUE) && (pMatriz[fuente][destino] != -1))
+				if(pMatriz[fuente][destino] != -1)
 				{
-					if(Integer.max(costos[fuente], costos[destino] + pMatriz[fuente][destino]) == costos[fuente])
+					if(costos[destino] > costos[fuente] + pMatriz[fuente][destino])
 					{
-						costos[fuente] = costos[destino] + pMatriz[fuente][destino];
-						predecesor[destino] = fuente;
+						costos[destino] = costos[fuente] + pMatriz[fuente][destino];
 					}
 				}
 			}
 			
 		}
 		
-		return predecesor;
+		return costos;
 	}
 	
 	public static void floydWarshall()
@@ -191,7 +188,7 @@ public class Lector {
 			}
 			
 			//Se imprime la matriz que se aceptó.
-			String prueba = "Matriz aceptada: ";
+			String prueba = "Matriz aceptada: \n";
 			for(int i = 0; i<tamanio; i++)
 			{
 				for(int j =0; j<tamanio; j++)
@@ -208,7 +205,7 @@ public class Lector {
 			fr.close();
 			
 			//Se ejecuta Dijkstra
-			String resultado = "Resultado de caminos minimos de Dijkstra:";
+			String resultado = "Resultado de caminos minimos de Dijkstra: \n";
 			for(int i = 0; i<tamanio; i++)
 			{
 				dijkstra_GetMinDistances(i);
@@ -225,7 +222,7 @@ public class Lector {
 			
 			
 			//Se ejecuta Bellman-Ford
-			String resultado2 = "Resultado de caminos mínimos de Bellman-Ford:";
+			String resultado2 = "Resultado de caminos mínimos de Bellman-Ford: \n";
 			for(int i = 0; i<tamanio; i++)
 			{
 				int[] bellman = bellmanFord(matriz, i);
@@ -241,7 +238,7 @@ public class Lector {
 			
 			//Se ejecuta Floyd-Warshall
 			floydWarshall();
-			String resultado3 = "Resultado de caminos mínimos de Floyd-Warshall:";
+			String resultado3 = "Resultado de caminos mínimos de Floyd-Warshall: \n";
 			for (int i = 0; i<tamanio; i++)
 			{
 				for(int j = 0;j<tamanio; j++)
