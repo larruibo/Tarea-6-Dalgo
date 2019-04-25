@@ -1,4 +1,3 @@
-package Puntos;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,7 +7,7 @@ public class BFS{
 
 	public ArrayList<ArrayList<Integer>> BFSCC(int[][] pMatriz)
 	{
-		//Se inicializa la queue y el arreglo que contiene la información de los nodos marcados
+		//Se inicializa la queue y el arreglo que contiene la informaciï¿½n de los nodos marcados
 		Queue<Integer> fila = new LinkedList<Integer>();
 		int V = pMatriz.length;
 		boolean marcados[] = new boolean[V];
@@ -19,7 +18,7 @@ public class BFS{
 		//Se recorre cada fila de la matriz
 		for(int i = 0; i < V; i++)
 		{
-			/*Si el nodo que se está revisando ya está marcado (ya pertenece a un componente conectado)
+			/*Si el nodo que se estï¿½ revisando ya estï¿½ marcado (ya pertenece a un componente conectado)
 			 * se ignora y se empieza a revisar el siguiente
 			*/
 			if(marcados[i] == true)
@@ -38,7 +37,7 @@ public class BFS{
 				marcados[0] = true;
 			}
 			
-			//Se marcan todos los vertices que estén conectados al componente actual
+			//Se marcan todos los vertices que estï¿½n conectados al componente actual
 			while(!fila.isEmpty())
 			{
 				//Se marca el vertice actual
@@ -46,7 +45,7 @@ public class BFS{
 				marcados[actual] = true;
 				componente.add(actual);
 				
-				//Se agregan a la fila los nodos que están conectados al vertice actual
+				//Se agregan a la fila los nodos que estï¿½n conectados al vertice actual
 				for(int j = 0; j < V; j++)
 				{
 					/*Si el valor en <i,j> es mayor a 0 quiere decir que hay un eje entre los vertices

@@ -1,4 +1,3 @@
-package Puntos;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -60,10 +59,10 @@ public class DFS {
 		//Se recorren todos los vertices
 		for(int i = 0; i < V; i++)
 		{
-			//Si el vertice no se ha visitado se hace la recursión
+			//Si el vertice no se ha visitado se hace la recursiï¿½n
 			if(!visitado[i])
 			{	
-				//La recursión devuelve una lista con todos los vertices conectados al vertice actual
+				//La recursiï¿½n devuelve una lista con todos los vertices conectados al vertice actual
 				ArrayList<Integer> componente = new ArrayList<Integer>();
 				recursionDFS(i,visitado,componente);
 				
@@ -90,7 +89,7 @@ public class DFS {
 		//Se recorre la lista de hijos del vertice fuente
 		for(int i = 0; i < hijos[pFuente].size(); i++)
 		{
-			//Si el vertice actual no se ha visitado se hace la recursión sobre este
+			//Si el vertice actual no se ha visitado se hace la recursiï¿½n sobre este
 			if(!pVisitados[hijos[pFuente].get(i)])
 			{
 				recursionDFS(i, pVisitados, pComponente);

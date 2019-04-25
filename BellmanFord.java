@@ -1,4 +1,3 @@
-package Puntos;
 
 public class BellmanFord {
 	
