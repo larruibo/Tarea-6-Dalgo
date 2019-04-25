@@ -1,10 +1,12 @@
 import java.io.*;
+import java.sql.Timestamp;
 
 public class Lector {
 
 	private static int tamanio;
 	private static int[][] matriz;
 	private static int [][] costoMinDij;
+	private static int[][] costoBell;
 	private static int [][] warshalC;
 	
 	
@@ -70,21 +72,21 @@ public class Lector {
 		 }
 		//Como este es un método para encontrar los caminos de 1 vertice en especifico, 
 		//añado los resultados a una matriz completa.
-		addDijkstra(sourceVertex, distance);
+		addToMatrix(sourceVertex, distance, costoMinDij);
 	}
 	
 	//Método para añadir todos los llamados a una matriz.
-	public static void addDijkstra(int sourceVertex, int [] key)
+	public static void addToMatrix(int sourceVertex, int [] key, int matrizP[][])
 	{
 		for (int i = 0; i <tamanio ; i++) 
 		{
-			costoMinDij[sourceVertex][i] = key[i];
+			matrizP[sourceVertex][i] = key[i];
 		}
 	}
 	
 	
 	
-	public static int[] bellmanFord(int[][] pMatriz, int pFuente)
+	public static void bellmanFord(int[][] pMatriz, int pFuente)
 	{
 		int V = pMatriz.length;
 		int[] costos = new int[V];
@@ -110,8 +112,9 @@ public class Lector {
 			}
 			
 		}
-		
-		return costos;
+		//Como este es un método para encontrar los caminos de 1 vertice en especifico, 
+		//añado los resultados a una matriz completa.
+		addToMatrix(pFuente, costos, costoBell);
 	}
 	
 	public static void floydWarshall()
@@ -156,6 +159,8 @@ public class Lector {
 		
 		try
 		{
+			Timestamp tiempoInicio = new Timestamp(System.currentTimeMillis());
+			
 			//Se lee el archivo.
 			File archivo = new File(args[0]);
 			FileReader fr = new FileReader(archivo);
@@ -170,10 +175,8 @@ public class Lector {
 			matriz = new int[tamanio][tamanio];
 			costoMinDij = new int[tamanio][tamanio];
 			warshalC = new int[tamanio][tamanio];
+			costoBell = new int[tamanio][tamanio];
 			
-			
-			//Se acepta la matriz y se inicializan los valores.
-			System.out.println("Se aceptó archivo con matriz de tamaño " + tamanio + "\n");
 			
 			String linea;
 			int fila = 0;
@@ -187,6 +190,9 @@ public class Lector {
 				fila++;
 			}
 			
+			//Se acepta la matriz y se inicializan los valores.
+			System.out.println("Se aceptó archivo con matriz de tamaño " + tamanio + "\n");
+			
 			//Se imprime la matriz que se aceptó.
 			String prueba = "Matriz aceptada: \n";
 			for(int i = 0; i<tamanio; i++)
@@ -197,46 +203,69 @@ public class Lector {
 				}
 				prueba += "\n";
 			}
+			if(tamanio <= 20)
+			{
+				System.out.println(prueba + "\n");
+			}
+			else
+			{
+				System.out.println("Matriz cargada, pero no mostrada. \n");
+			}
 			
-			System.out.println(prueba + "\n");
 			
 			//Cierro los flujos cuando ya no son necesarios.
 			br.close();
 			fr.close();
 			
 			//Se ejecuta Dijkstra
+			Timestamp tiempoInicioDij = new Timestamp(System.currentTimeMillis());
 			String resultado = "Resultado de caminos minimos de Dijkstra: \n";
+			
 			for(int i = 0; i<tamanio; i++)
 			{
 				dijkstra_GetMinDistances(i);
-			}
-			for(int i = 0; i<tamanio; i++)
-			{
 				for(int j =0; j<tamanio; j++)
 				{
 					resultado += costoMinDij[i][j] + "\t";
 				}
 				resultado += "\n";
 			}
-			System.out.println(resultado + "\n");
+			Timestamp tiempoFinDij = new Timestamp(System.currentTimeMillis());
+			if(tamanio <= 20)
+			{
+				System.out.println(resultado + "\n");
+			}
+			else
+			{
+				System.out.println("Matriz calculada, pero no mostrada. \n");
+			}
 			
 			
 			//Se ejecuta Bellman-Ford
+			Timestamp tiempoInicioBell = new Timestamp(System.currentTimeMillis());
 			String resultado2 = "Resultado de caminos mínimos de Bellman-Ford: \n";
 			for(int i = 0; i<tamanio; i++)
 			{
-				int[] bellman = bellmanFord(matriz, i);
-				for(int j = 0; j< bellman.length; j++)
+				bellmanFord(matriz, i);
+				for(int j = 0; j< tamanio; j++)
 				{
-					resultado2 += bellman[j] + "\t";
+					resultado2 += costoBell[i][j] + "\t";
 				}
 				resultado2 += "\n";
 			}
-			
-			System.out.println(resultado2 + "\n");
+			Timestamp tiempoFinBell = new Timestamp(System.currentTimeMillis());
+			if(tamanio <= 20)
+			{
+				System.out.println(resultado2 + "\n");
+			}
+			else
+			{
+				System.out.println("Matriz calculada, pero no mostrada. \n");
+			}
 			
 			
 			//Se ejecuta Floyd-Warshall
+			Timestamp tiempoInicioWar = new Timestamp(System.currentTimeMillis());
 			floydWarshall();
 			String resultado3 = "Resultado de caminos mínimos de Floyd-Warshall: \n";
 			for (int i = 0; i<tamanio; i++)
@@ -247,7 +276,19 @@ public class Lector {
 				}
 				resultado3 += "\n";
 			}
-			System.out.println(resultado3);
+			Timestamp tiempoFinWar = new Timestamp(System.currentTimeMillis());
+			if(tamanio <= 20)
+			{
+				System.out.println(resultado3 + "\n");
+			}
+			else
+			{
+				System.out.println("Matriz calculada, pero no mostrada. \n");
+			}
+			
+			System.out.println("Tiempo que tardó Dijkstra: " + (tiempoFinDij.getTime()-tiempoInicioDij.getTime()) + " milisegundos.");
+			System.out.println("Tiempo que tardó Bellman-Ford: " + (tiempoFinBell.getTime()-tiempoInicioBell.getTime())+ " milisegundos.");
+			System.out.println("Tiempo que tardó Floyd-Warshall: " + (tiempoFinWar.getTime()-tiempoInicioWar.getTime())+ " milisegundos.");
 		}
 		catch (Exception e)
 		{

@@ -1,12 +1,17 @@
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Stack;
 
 public class DFS {
 
-	private ArrayList<Integer>[] hijos;
+	private static ArrayList<Integer>[] hijos;
+	private static int tamanio;
+	private static int[][] matriz;
 	
-	public int[] topologicalDFS(int[][] pMatriz)
+	public static int[] topologicalDFS(int[][] pMatriz)
 	{
 		
 		Stack<Integer> orden = new Stack<Integer>();
@@ -31,7 +36,7 @@ public class DFS {
 		return rta;
 	}
 	
-	public boolean DFSCC(int[][] pMatriz)
+	public static boolean DFSCC(int[][] pMatriz)
 	{
 		//Se inicializan todos los vertices como no visitados
 		int V = pMatriz.length;
@@ -81,7 +86,7 @@ public class DFS {
 	/*
 	 * Retorna los vertices conectados al nodo actual
 	 */
-	public ArrayList<Integer> recursionDFS(int pFuente, boolean[] pVisitados, ArrayList<Integer> pComponente)
+	public static ArrayList<Integer> recursionDFS(int pFuente, boolean[] pVisitados, ArrayList<Integer> pComponente)
 	{
 		//Se marca el vertice fuente como visitado
 		pVisitados[pFuente] = true;
@@ -103,7 +108,7 @@ public class DFS {
 		
 	}
 	
-	public void ordenTopologico(int pVertice, boolean pVisitado[], Stack<Integer> pOrden, int[][] pMatriz)
+	public static void ordenTopologico(int pVertice, boolean pVisitado[], Stack<Integer> pOrden, int[][] pMatriz)
 	{
 		pVisitado[pVertice] = true;
 		int V = pMatriz.length;
@@ -125,6 +130,74 @@ public class DFS {
 	
 	
 	public static void main(String[] args) {
+		
+		try
+		{
+			//Se lee el archivo.
+			File archivo = new File(args[0]);
+			FileReader fr = new FileReader(archivo);
+			BufferedReader br = new BufferedReader(fr);
+			
+			//Se obtiene el tamaño de la matriz del nombre del archivo.
+			String nom = args[0].replaceAll("distances", "");
+			nom = nom.replaceAll(".txt", "");
+			
+			//Se inicializan todas las variables necesarias.
+			tamanio = Integer.parseInt(nom);
+			matriz = new int[tamanio][tamanio];
+			hijos = new ArrayList[tamanio];
+			for(int i = 0; i<hijos.length; i++)
+			{
+				hijos[i] = new ArrayList();
+			}
+			
+			
+			String linea;
+			int fila = 0;
+			while((linea = br.readLine())!= null)
+			{
+				String[] numeros = linea.split("\t");
+				for(int columna = 0; columna<numeros.length; columna++)
+				{
+					matriz[fila][columna] = Integer.parseInt(numeros[columna]);
+				}
+				fila++;
+			}
+			
+			//Se acepta la matriz y se inicializan los valores.
+			System.out.println("Se aceptó archivo con matriz de tamaño " + tamanio + "\n");
+			
+			//Se imprime la matriz que se aceptó.
+			String prueba = "Matriz aceptada: \n";
+			for(int i = 0; i<tamanio; i++)
+			{
+				for(int j =0; j<tamanio; j++)
+				{
+					prueba += matriz[i][j] + "\t";
+				}
+				prueba += "\n";
+			}
+			if(tamanio <= 20)
+			{
+				System.out.println(prueba + "\n");
+			}
+			else
+			{
+				System.out.println("Matriz cargada, pero no mostrada. \n");
+			}
+			
+			
+			//Cierro los flujos cuando ya no son necesarios.
+			br.close();
+			fr.close();
+			
+			boolean respuesta = DFSCC(matriz);
+			System.out.println(respuesta);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		
 	}
 
